@@ -60,11 +60,6 @@ module.exports.editlistings=async(req,res)=>{
 
 
 module.exports.updatelisting=async(req,res)=>{
-    let response=await geocodingClient.forwardGeocode({
-        query: req.body.listing.location,
-        limit: 1
-      })
-        .send()
     let {id}=req.params;
     let listing=await Listings.findByIdAndUpdate(id,{...req.body.listing});
 
@@ -82,9 +77,8 @@ module.exports.updatelisting=async(req,res)=>{
         let url=req.file.path;
         let filename=req.file.filename;
         listing.image={url,filename};
-        await listing.save();
     }
-    ;
+    await listing.save();
     req.flash("success","listing is updated");
     res.redirect(`/listings/${id}`);
 }
