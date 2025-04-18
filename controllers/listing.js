@@ -60,6 +60,11 @@ module.exports.editlistings=async(req,res)=>{
 
 
 module.exports.updatelisting=async(req,res)=>{
+    let response=await geocodingClient.forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1
+      })
+        .send()
     let {id}=req.params;
     let listing=await Listings.findByIdAndUpdate(id,{...req.body.listing});
 
