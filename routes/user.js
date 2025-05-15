@@ -23,4 +23,17 @@ router
 
 router.get("/logout",usercontroller.logout)
 
+router
+    .route("/forgot")
+    .get(usercontroller.forgotform)
+    .post(usercontroller.forgot);
+
+        
+router
+    .route("/reset/:token")
+    .get(usercontroller.resetform)
+    .post(usercontroller.reset);
+    
+    
+
 module.exports=router;

@@ -42,7 +42,7 @@
             <% if (curruser) { %>
                 <h4>Leave a Review</h4>
                 <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
-                    <div class="mb-3">
+                    <div>
                         <label for="rating" class="form-label">Rating</label>
                         <fieldset class="starability-slot">
                             <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
