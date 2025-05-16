@@ -1,0 +1,21 @@
+<%layout("/layouts/boilerplate")-%>
+
+<body>
+    <div class="row">
+        <div class="col-6 offset-3 mt-3 mb-3">
+            <h1>OTP Verification Code</h1>
+            <form method="POST" action="/otp" novalidate class="needs-validation">
+                <input type="hidden" name="email" value="<%= email %>" />
+                <div class="mb-3">
+                    <lable for="otp" class="form-label">Enter verification code</lable>
+                    <input name="otp" id="otp" type="password" class="form-control" required>
+                    
+                </div>
+                
+                
+                
+                <button class="btn btn-success mb-3">Enter</button>
+            </form>
+        </div>
+    </div>
+</body>

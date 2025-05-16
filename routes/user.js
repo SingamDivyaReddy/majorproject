@@ -34,6 +34,9 @@ router
     .get(usercontroller.resetform)
     .post(usercontroller.reset);
     
-    
+router
+  .route("/otp")
+  .get(usercontroller.otpform)
+  .post(wrapAsync(usercontroller.verifyOtp));
 
 module.exports=router;
