@@ -3,18 +3,19 @@ body{
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: #EBF5FB !important;
 }
 .container{
     flex: 1rem;
 }
 .navbar{
-    height: 5rem; 
-    background-color: white; 
+    min-height: 5rem; 
+    background-color: 	#8ebaec;
     box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);
     
 }
 .fa-compass{
-    color: #fe424d;
+    color: #007bff;
     font-size: 2rem !important;
     margin-left: 2rem;
 
@@ -29,7 +30,7 @@ body{
     justify-content: center;
     align-items: center;
     height: 8rem;
-    background-color: rgb(218, 213, 213);
+    background-color:#8ebaec;
     width: 100%;
     gap: 0.5rem;
 }
@@ -63,23 +64,68 @@ body{
 .listing-card{
     border: none !important;
     margin-bottom: 2rem !important;
-    padding: 0 10px;
+    padding: 0rem !important;
+    background-color: #bbd7eb !important;
+    box-shadow: 0px 0px 13px #0d70f2 !important;
     
 }
 .card-img-top{
-    border-radius: 0.5rem 0.5rem 0.5rem 0.5rem !important;
-    height: 20rem;
-    width: 100% !important;
+    height: 17rem;
+    width: 100%!important;
     object-fit: cover;
-    
+    border-radius: 0.7rem 0.7rem 0rem 0rem !important;
 }
 .card-img-show{
     height: 20rem;
     width: 30rem !important;
     object-fit: cover;
+    border-radius: 0.7rem 0.7rem 0rem 0rem !important;
 }
 .card-body{
     padding: 0rem !important;
+    background-color: #d7e6fc !important;
+
+}
+.card{
+    padding: 0rem !important;
+    background-color: #bbd7eb !important;
+    box-shadow: 0px 0px 13px #767373 !important;
+    margin: 1rem 1rem 1rem 1rem !important;
+}
+.card:hover{
+    padding: 0rem !important;
+    background-color: #bbd7eb !important;
+    box-shadow: 0px 0px 20px #686565 !important;
+    margin: 1rem 1rem 1rem 1rem !important;
+}
+.title{
+    text-transform: uppercase;
+    text-align:justify;
+    padding: 1rem !important;
+    text-decoration: underline;
+}
+.card-des{
+    border-radius: 0rem 0rem 0.7rem 0.7rem;
+    text-align: center;
+    height: 5rem;
+    padding-top: 1rem !important;
+}
+.card-show{
+    box-shadow: 0px 0px 20px #2c75da !important;
+}
+.card-details{
+    border-radius: 0rem 0rem 0.5rem 0.5rem;
+    padding: 1rem 1rem 1rem 1rem !important;
+}
+.card-review{
+    padding-top: 0.5rem !important;
+    padding-right: 1rem !important;
+    padding-bottom: 0.5rem !important;
+    padding-left: 1rem !important;
+
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 5px #2c75da !important;
+    background-color: #d7e6fc;
 }
 .listing-link{
     text-decoration: none !important;
@@ -100,15 +146,32 @@ body{
 /*new*/
 .btn-a{
     border: none !important;
-    background-color: #fe424d !important;
+    background-color: #6b8ec2 !important;
 }
 
 .btn-delete{
     border: none !important;
     background-color: #222222 !important;
 }
+.btn-submit{
+    border: none !important;
+    background-color: #6b8ec2 !important;
+    color:#fff !important;
+}
+.btn-submit:hover {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+.btn-cred{
+    border: none !important;
+    background-color: #199d3e !important;
+    color:#fff !important;
+}
 /*map*/
 #map { 
+    border: #6b8ec2 !important;
+    border-radius: 0.5rem !important;
     height:400px !important;
     width: 60vh !important;
+    box-shadow: 0px 0px 5px #2c75da !important;
 }

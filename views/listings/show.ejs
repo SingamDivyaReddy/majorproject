@@ -7,12 +7,12 @@
 
 <body>
     <div class="row mt-3">
-        <div class="col-8 offset-3">
+        <div class="col-8 offset-3 title">
             <h3><%= listing.title %></h3>
         </div>
-        <div class="card col-6 offset-3 listing-card" style="width: 18rem;">
+        <div class="col-6 offset-3 listing-card card-show" style="width: 30rem;">
             <img src="<%= listing.image.url %>" class="card-img-top card-img-show" alt="Listing image">
-            <div class="card-body">
+            <div class="card-body card-details">
                 <p class="card-text">
                     Owned by <i><%= listing.owner.username %></i><br>
                     <%= listing.description %><br>
@@ -63,7 +63,7 @@
                         <textarea name="review[comment]" id="comment" placeholder="Enter comments" type="text" class="form-control" required></textarea>
                         <div class="invalid-feedback">Please add some comments for review!!</div>
                     </div>
-                    <button class="btn btn-outline-dark">Submit</button>
+                    <button class="btn btn-submit">Submit</button>
                 </form>
                 <hr>
             <% } %>
@@ -73,8 +73,8 @@
                     <p><b>All Reviews</b></p>
                     <% for (let review of listing.reviews) { %>
                         <div class="col-5 mb-3">
-                            <div class="card col-12">
-                                <div class="card-body">
+                            <div class="col-12">
+                                <div class="card-review">
                                     <h5 class="card-title mt-3">@<%= review.author.username %></h5>
                                     <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
                                     <p class="card-text"><%= review.comment %></p>
@@ -88,13 +88,15 @@
                         </div>
                     <% } %>
                 </div>
+                <hr>
             <% } %>
+
         </div>
 
         <div class="row mb-3">
             <div class="col-6 offset-3">
                 <h3>Where you'll be</h3>
-                <div id="map" style="height: 400px;"></div>
+                <div id="map" style="height: 400px ; background-color: deepskyblue"></div>
             </div>   
         </div>
     </div>
