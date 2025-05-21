@@ -6,15 +6,16 @@
             <h1 style="text-align: center;">Reset your Password</h1>
             <form method="POST" action="/reset/<%= token %>">
                 <div class="mt-3">
-                    <label for="newPassword">New Password:</label>
-                    <input type="password" name="newPassword" required />
+                    <label for="newPassword" class="form-label">New Password:</label>
+                    <input type="password" name="newPassword" class="form-control" required />
                 </div>
                 <div class="mt-3">
-                    <label for="confirmPassword">Confirm Password:</label>
-                    <input type="password" name="confirmPassword" required />
+                    <label for="confirmPassword" class="form-label">Confirm Password:</label>
+                    <input type="password" name="confirmPassword"  class="form-control"required />
                 </div>
-                <button class="mt-3 btn-cred" type="submit">Reset Password</button>                
+                <button class="mt-3 btn btn-cred" type="submit w-100">Reset Password</button>                
             </form>
+            
         </div>
     </div>
 </body>
