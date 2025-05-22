@@ -40,6 +40,23 @@
                     <input name="listing[location]" placeholder="Telangana , Hyderabad" type="text" class="form-control" required>
                     <div class="invalid-feedback">Location should be valid</div>
                 </div>
+                <!-- Category Selection Dropdown -->
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select name="listing[category]" class="form-select" required>
+                        <option value="" disabled selected>Select a category</option>
+                        <option value="Trending">Trending</option>
+                        <option value="Rooms">Rooms</option>
+                        <option value="Iconic cities">Iconic cities</option>
+                        <option value="Mountains">Mountains</option>
+                        <option value="Amazing pools">Amazing pools</option>
+                        <option value="Castles">Castles</option>
+                        <option value="Camping">Camping</option>
+                        <option value="Farms">Farms</option>
+                        <option value="Arctic">Arctic</option>
+                    </select>
+                    <div class="invalid-feedback">Category should be selected</div>
+                </div>
                 <button class="btn btn-a btn-dark mb-3 w-100">Add</button>
             </form>
         </div>

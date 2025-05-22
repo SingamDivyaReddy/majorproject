@@ -17,6 +17,9 @@ router
 //New route
 router.get("/new",isLoggedIn,listingcontroller.newform)
 
+// Search route - No longer needed, search is handled by the index route controller
+// router.get("/search", wrapAsync(listingcontroller.searchListings));
+
 router    
     .route("/:id")
     .get(wrapAsync(listingcontroller.showlistings))//Show route

@@ -72,9 +72,14 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
+    console.log("\n--- New Request ---");
+    console.log("Path:", req.path);
+    console.log("Session data:", req.session);
+    console.log("req.user (after deserializeUser?):", req.user);
     res.locals.success=req.flash("success");
     res.locals.error=req.flash("error");
     res.locals.curruser=req.user;
+    console.log("res.locals.curruser set to:", res.locals.curruser);
     next();
 })
 

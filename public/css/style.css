@@ -104,6 +104,7 @@ body{
     padding: 1rem !important;
     text-decoration: underline;
 }
+
 .card-des{
     border-radius: 0rem 0rem 0.7rem 0.7rem;
     text-align: center;
@@ -111,7 +112,7 @@ body{
     padding-top: 1rem !important;
 }
 .card-show{
-    box-shadow: 0px 0px 20px #2c75da !important;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2), 0px 6px 20px rgba(0, 0, 0, 0.19) !important;
 }
 .card-details{
     border-radius: 0rem 0rem 0.5rem 0.5rem;

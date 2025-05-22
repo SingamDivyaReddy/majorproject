@@ -31,6 +31,11 @@ let listingSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:"User",
     },
+    // Category for the listing, used for filtering
+    category:{
+        type:String,
+        enum:["Trending", "Rooms", "Iconic cities", "Mountains", "Amazing pools", "Castles", "Camping", "Farms", "Arctic"], // Corrected "Castels" to "Castles"
+    },
     geometry: {
         type: {
           type: String, // Don't do `{ location: { type: String } }`

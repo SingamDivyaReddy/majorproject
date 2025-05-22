@@ -8,7 +8,11 @@ const ExpressError=require("./utils/ExpressError.js");
 module.exports.isLoggedIn=((req,res,next)=>{
     if(!req.isAuthenticated()){
         req.session.redirectUrl=req.originalUrl;
-        req.flash("error","You must be logged in");
+        if (req.originalUrl === "/listings/new") {
+            req.flash("error","You must be logged in to create a new listing.");
+        } else {
+            req.flash("error","You must be logged in to perform this action.");
+        }
         return res.redirect("/login");
     }
     next();

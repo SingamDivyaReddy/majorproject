@@ -20,7 +20,8 @@
   }
 </style>
 
-<nav class="navbar navbar-expand-lg bg-body-light sticky-top">
+<!-- Navbar responsiveness adjusted to expand at medium breakpoints (md) instead of large (lg) -->
+<nav class="navbar navbar-expand-md bg-body-light sticky-top">
     <div class="container-fluid">
       <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
@@ -30,12 +31,16 @@
         <div class="navbar-nav">
           <a class="nav-link" href="/listings">Explore</a>
         </div>
-        <div class="navbar-nav ms-auto">
-        <form class="d-flex" role="search">
-          <input class="form-control me-2 search-input" type="search" placeholder="Search Destinations" >
-          <button class="btn btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
-        </form>
-      </div>
+        <%# Conditionally render the search form. Default to true if showSearch is not defined. %>
+        <% if (typeof showSearch === 'undefined' || showSearch) { %>
+          <!-- Search form in the navbar -->
+          <div class="navbar-nav ms-auto">
+            <form class="d-flex" role="search" method="GET" action="/listings">
+              <input class="form-control me-2 search-input" type="search" name="searchQuery" placeholder="Search Destinations" aria-label="Search">
+              <button class="btn btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+            </form>
+          </div>
+        <% } %>
         
         
         

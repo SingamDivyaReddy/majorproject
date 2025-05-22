@@ -4,9 +4,59 @@ const maptoken=process.env.MAP_TOKEN;
 const geocodingClient = mbxgeocoding({ accessToken: maptoken });
 
 module.exports.index=async(req,res)=>{
-    let alllistings=await(Listings.find({}));
-    res.render("listings/index.ejs",{alllistings});
+    // Get category from query parameters
+    const { category, minPrice, maxPrice, searchQuery } = req.query;
+    let filter = {}; // Initialize an empty filter object
+
+    // If a category is provided, add it to the filter
+    if (category) {
+        filter.category = category;
+    }
+
+    // Add price filtering if minPrice and maxPrice are provided
+    if (minPrice || maxPrice) {
+        filter.price = {};
+        if (minPrice) {
+            filter.price.$gte = parseInt(minPrice);
+        }
+        if (maxPrice) {
+            filter.price.$lte = parseInt(maxPrice);
+        }
+    }
     
+    // If a search query is provided, combine it with existing filters
+    if (searchQuery && typeof searchQuery === 'string' && searchQuery.trim()) {
+        const searchTerm = searchQuery.trim();
+        const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');
+        const regex = new RegExp(escapedSearchTerm, 'i');
+        
+        const searchOrClause = { $or: [{ title: regex }, { location: regex }, { country: regex }] };
+
+        if (Object.keys(filter).length > 0) {
+            // If other filters exist, combine with $and
+            filter = {
+                $and: [
+                    {...filter}, // Spread existing filters (e.g., category, price)
+                    searchOrClause
+                ]
+            };
+        } else {
+            // If no other filters, search is the main query
+            filter = searchOrClause;
+        }
+    }
+
+    // Fetch listings based on the filter
+    let alllistings = await Listings.find(filter);
+
+    // Render the index page, passing the listings, current category, prices, and search query
+    res.render("listings/index.ejs",{
+        alllistings, 
+        currentCategory: category, 
+        minPrice: minPrice ? parseInt(minPrice) : "", // Pass parsed int or empty string 
+        maxPrice: maxPrice ? parseInt(maxPrice) : "", // Pass parsed int or empty string
+        searchQuery: searchQuery || "" // Pass empty string if searchQuery is undefined
+    });
 }
 
 module.exports.newform=(req,res)=>{
@@ -21,7 +71,8 @@ module.exports.showlistings=async(req,res)=>{
         res.redirect("/listings");
     }
 
-    res.render("listings/show.ejs",{listing});
+    // Pass showSearch: false to hide search bar on this page
+    res.render("listings/show.ejs",{listing, showSearch: false});
 }
 
 module.exports.createlistings=async(req,res)=>{
@@ -92,3 +143,47 @@ module.exports.destroylisting=async(req,res)=>{
     console.log(deletedid);
     res.redirect("/listings");
 }
+
+// The searchListings function is no longer needed as its functionality
+// has been integrated into the index function.
+/*
+module.exports.searchListings = async (req, res) => {
+    const { query: rawQuery } = req.query; 
+    let alllistings = [];
+    let searchQueryForDisplay = rawQuery; 
+    let filter = {};
+
+    if (rawQuery && typeof rawQuery === 'string') {
+        const searchTerm = rawQuery.trim(); 
+
+        if (searchTerm) {
+            const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');
+            const regex = new RegExp(escapedSearchTerm, 'i'); 
+
+            filter = {
+                $or: [
+                    { title: { $regex: regex } },      
+                    { location: { $regex: regex } },   
+                    { country: { $regex: regex } }    
+                ]
+            };
+            alllistings = await Listings.find(filter);
+        } else {
+            searchQueryForDisplay = ""; 
+            alllistings = await Listings.find({}); 
+        }
+    } else {
+        searchQueryForDisplay = "";
+        alllistings = await Listings.find({}); 
+    }
+
+    res.render("listings/index.ejs", { 
+        alllistings, 
+        isSearchResult: true, 
+        searchQuery: searchQueryForDisplay,
+        currentCategory: req.query.category, 
+        minPrice: req.query.minPrice,
+        maxPrice: req.query.maxPrice
+    }); 
+};
+*/

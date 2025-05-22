@@ -1,136 +1,371 @@
 <%layout("/layouts/boilerplate")-%>
 <style>
-    #filters{
+    #filters-bar {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: wrap; 
         align-items: center;
+        gap: 1.5rem; /* Maintained gap for items in the bar */
+        margin-top: 1.5rem; 
     }
+
+    /* Styles for individual icon-based category filters */
     .filter{
         text-align: center;
-        margin-right: 2rem;
-        margin-top: 2rem;
-        opacity: 0.6;
-
+        margin-top: 0.5rem; 
+        opacity: 0.75; 
+        padding-bottom: 5px; 
+        border-bottom: 3px solid transparent; 
+        transition: opacity 0.2s ease-in-out, border-color 0.2s ease-in-out; 
     }
     .filter:hover{
         opacity: 1;
         cursor: pointer;
     }
+    .filter.active-filter { /* Style for the active icon-based category filter */
+        opacity: 1;
+        font-weight: bold;
+        border-bottom: 3px solid #0080ff; 
+    }
     .filter p{
         font-size: 0.8rem;
+        margin-bottom: 0; 
     }
-    .tax-toggle{
-        border: 1px solid black;
-        border-radius: 1rem;
-        height: 3.25rem;
+
+    /* Styles for the Price Filter Dropdown */
+    .price-dropdown-btn {
+        background-color: #6c757d !important; /* Bootstrap secondary color or custom */
+        border-color: #6c757d !important;
+        color: #fff !important;
+    }
+    .price-dropdown-btn:hover, .price-dropdown-btn:focus {
+        background-color: #5a6268 !important; 
+        border-color: #545b62 !important;
+    }
+    .price-dropdown-menu {
         padding: 1rem;
-        margin-left: 18rem;
+        min-width: 280px; /* Adjusted width for price filter */
+        max-width: calc(100vw - 30px); /* Ensure it doesn't overflow viewport */
+        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    }
+    .price-dropdown-menu .dropdown-header {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+    .price-filter-content { 
+        padding: 0.5rem 0;
+    }
+    .price-filter-inputs {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .price-filter-inputs label {
+        font-size: 0.9rem;
+        white-space: nowrap; 
+    }
+    .price-filter-inputs input[type="range"] {
+        flex-grow: 1;
+    }
+    .price-filter-values {
+        text-align: center;
+        font-size: 0.9rem;
+        color: #555;
+        margin-bottom: 1rem;
+    }
+    .clear-filters-btn-container {
+        margin-top: 0.75rem; /* Space above the clear button */
+    }
+
+    /* Tax Toggle */
+    .tax-toggle{
+        border: 1px solid #ddd; 
+        border-radius: 0.75rem; 
+        height: auto; 
+        padding: 0.75rem 1rem; 
         display: flex;
         align-items: center;
+        margin-top: 0.5rem; /* Give it some top margin if it wraps */
+        background-color: #f9f9f9; 
+        /* min-width: 260px; Reverted this line */
     }
     .tax-info{
         display: none;
+    }
 
+    /* Responsive adjustments */
+    @media (max-width: 768px) { 
+        #filters-bar {
+            overflow-x: auto; 
+            white-space: nowrap; 
+            flex-wrap: nowrap;  /* Make sure items don't wrap to next line, force scroll */
+            padding-bottom: 1rem; 
+            -ms-overflow-style: none;  
+            scrollbar-width: none;  
+        }
+        #filters-bar::-webkit-scrollbar {
+            width: 0px;
+            height: 0px;
+        }
+
+        /* All direct filter items in the bar get this style for horizontal scrolling */
+        #filters-bar > .filter, 
+        #filters-bar > .dropdown,  /* Targets the div wrapping the price button */
+        #filters-bar > .tax-toggle { 
+            flex: 0 0 auto; /* Prevent shrinking for all direct children */
+            margin-top: 0.5rem; 
+            margin-bottom: 0.5rem; 
+        }
+
+        /* Ensure the price dropdown menu is positioned correctly relative to its button */
+        #filters-bar > .dropdown { 
+            position: relative;
+        }
+
+        /* Removed styles for .price-filter-container, .tax-filter-container, and #category-filters-scroll-container 
+           as they are either removed or their responsive handling is now covered by #filters-bar direct children rule 
+        */
+       .tax-toggle {
+            /* Reset any specific small-screen centering if not desired when inline */
+            /* justify-content: center; /* This might still be useful if tax-toggle itself is a flex container */
+            /* margin-left: 0; */
+        }
     }
 </style>
 <body>
     
-    <!-- <form method="GET" action="/listings/new">
-        <button>New Listing</button>
-    </form> -->
-    <div id="filters" class="mt-3">
-        <div class="filter">
-            <div><i class="fa-solid fa-fire"></i></div>
-            <p>Trending</p>
-        </div>
-        <div class="filter">
-            <div>
-                <i class="fa-solid fa-bed"></i>
+    <!-- Search results information -->
+    <% if (typeof searchQuery !== 'undefined' && searchQuery && searchQuery.trim() !== '') { %>
+        <div class="row mt-3">
+            <div class="col-12 text-center">
+                <% if (alllistings && alllistings.length > 0) { %>
+                    <h4>Search results for "<%- searchQuery %>"</h4>
+                <% } else { %>
+                    <h4>No listings found for "<%- searchQuery %>"</h4>
+                    <p><a href="/listings">Clear search and view all listings</a></p>
+                <% } %>
             </div>
-            <p>Rooms</p>
         </div>
-        <div class="filter">
-            <div>
-                <i class="fa-solid fa-mountain-city"></i>
-            </div>
-            <p>Iconic cities</p>
-        </div>
-        <div class="filter">
-            <div>
-                <i class="fa-solid fa-person-swimming"></i>
-            </div>
-            <p>Amazing pools</p>
-        </div>
-        <div class="filter">
-            <div>
-                <i class="fa-solid fa-mountain"></i>
-            </div>
-            <p>Mountains</p>
-        </div>
-        <div class="filter">
-            <div>
-                <i class="fa-brands fa-fort-awesome"></i>
-            </div>
-            <p>Castels</p>
-        </div>
-        <div class="filter">
-            <div>
-                <i class="fa-solid fa-campground"></i>
-            </div>
-            <p>Camping</p>
-        </div>
-        <div class="filter">
-            <div>
-                <i class="fa-solid fa-cow"></i>
-            </div>
-            <p>Farms</p>
-        </div>
-        <div class="filter">
-            <div>
-                <i class="fa-solid fa-snowflake"></i>
-            </div>
-            <p>Arctic</p>
-        </div>
-        <div class="tax-toggle mt-6">
-            <div class="form-check-reverse form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexswitchCheckDefault">
-                <label class="form-check-label" for="flexswitchCheckDefault">Display total after taxes</label>
+    <% } %>
+
+    <form method="GET" action="/listings" id="filter-form">
+        <input type="hidden" name="searchQuery" value="<%= (typeof searchQuery !== 'undefined' && searchQuery) ? searchQuery : '' %>">
+        <input type="hidden" name="category" id="hiddenCategoryInput" value="<%= (typeof currentCategory !== 'undefined' && currentCategory) ? currentCategory : '' %>">
+        
+        <div id="filters-bar" class="mt-3">
+            <%# Conditionally show category filters and clear link if NOT a search result page %>
+            <% if (!searchQuery || !searchQuery.trim()) { %>
+                <!-- Category Filters: Now direct children of #filters-bar -->
+                <div class="filter">
+                    <a href="#" data-category="Trending" class="text-decoration-none text-dark category-link">
+                        <div><i class="fa-solid fa-fire"></i></div>
+                        <p>Trending</p>
+                    </a>
+                </div>
+                <div class="filter">
+                    <a href="#" data-category="Rooms" class="text-decoration-none text-dark category-link">
+                        <div><i class="fa-solid fa-bed"></i></div>
+                        <p>Rooms</p>
+                    </a>
+                </div>
+                <div class="filter">
+                    <a href="#" data-category="Iconic cities" class="text-decoration-none text-dark category-link">
+                        <div><i class="fa-solid fa-mountain-city"></i></div>
+                        <p>Iconic cities</p>
+                    </a>
+                </div>
+                <div class="filter">
+                    <a href="#" data-category="Mountains" class="text-decoration-none text-dark category-link">
+                        <div><i class="fa-solid fa-mountain"></i></div>
+                        <p>Mountains</p>
+                    </a>
+                </div>
+                <div class="filter">
+                    <a href="#" data-category="Amazing pools" class="text-decoration-none text-dark category-link">
+                        <div><i class="fa-solid fa-person-swimming"></i></div>
+                        <p>Amazing pools</p>
+                    </a>
+                </div>
+                <div class="filter">
+                    <a href="#" data-category="Castles" class="text-decoration-none text-dark category-link">
+                        <div><i class="fa-brands fa-fort-awesome"></i></div>
+                        <p>Castles</p>
+                    </a>
+                </div>
+                <div class="filter">
+                    <a href="#" data-category="Camping" class="text-decoration-none text-dark category-link">
+                        <div><i class="fa-solid fa-campground"></i></div>
+                        <p>Camping</p>
+                    </a>
+                </div>
+                <div class="filter">
+                    <a href="#" data-category="Farms" class="text-decoration-none text-dark category-link">
+                        <div><i class="fa-solid fa-tractor"></i></div>
+                        <p>Farms</p>
+                    </a>
+                </div>
+                <div class="filter">
+                    <a href="#" data-category="Arctic" class="text-decoration-none text-dark category-link">
+                        <div><i class="fa-solid fa-igloo"></i></div>
+                        <p>Arctic</p>
+                    </a>
+                </div>
+            <% } %>
+
+            <!-- Price Filter Dropdown (Always Visible) -->
+            <div class="dropdown">
+                <button class="btn price-dropdown-btn dropdown-toggle" type="button" id="priceFilterDropdownButton" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                    <i class="fa-solid fa-dollar-sign"></i> Price Range
+                </button>
+                <div class="dropdown-menu price-dropdown-menu" aria-labelledby="priceFilterDropdownButton">
+                    <div class="dropdown-header">Set Price Range (<span id="currencySymbol">&#8377;</span>)</div>
+                    <div class="price-filter-content">
+                        <div class="price-filter-inputs">
+                            <label for="minPriceRange">Min: <span id="minPriceDisplay"><%= (typeof minPrice !== 'undefined' && minPrice !== "") ? minPrice : 0 %></span></label>
+                            <input type="range" class="form-range" id="minPriceRange" name="minPrice" min="0" max="50000" value="<%= (typeof minPrice !== 'undefined' && minPrice !== "") ? minPrice : 0 %>" step="500">
+                        </div>
+                        <div class="price-filter-inputs">
+                            <label for="maxPriceRange">Max: <span id="maxPriceDisplay"><%= (typeof maxPrice !== 'undefined' && maxPrice !== "") ? maxPrice : 50000 %></span></label>
+                            <input type="range" class="form-range" id="maxPriceRange" name="maxPrice" min="0" max="50000" value="<%= (typeof maxPrice !== 'undefined' && maxPrice !== "") ? maxPrice : 50000 %>" step="500">
+                        </div>
+                        <div class="price-filter-values">
+                            Current: <span id="currentMinPriceDisp">&#8377;<%= (typeof minPrice !== 'undefined' && minPrice !== "") ? minPrice : 0 %></span> - <span id="currentMaxPriceDisp">&#8377;<%= (typeof maxPrice !== 'undefined' && maxPrice !== "") ? maxPrice : 50000 %></span>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary w-100">Apply Price</button>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="clear-filters-btn-container px-2">
+                        <a href="/listings" class="btn btn-sm btn-outline-danger w-100">Clear All Filters</a>
+                    </div>
+                </div>
             </div>
 
-        </div>
+            <!-- Tax toggle button (Now always visible with Price Filter) -->
+            <div class="tax-toggle">
+                <div class="form-check-reverse form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Display total after taxes</label>
+                </div>
+            </div>
+        </div> <!-- Closing filters-bar div -->
+    </form> 
         
-    </div>
-        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3 ">
-            <% for(let listing of alllistings){ %>
-                <a href="listings/<%=listing._id%>" class="listing-link">
-                    <div class="card cols listing-card card-index" >
-                        <img src="<%=listing.image.url%>" class="card-img-top" alt="Image" >
-                        <div class="card-img-overlay"></div>
-                        <div class="card-body card-des">
-                            <p class="card-text"><b><%= listing.title%></b><br>
-                                &#8377;<%=listing.price.toLocaleString("en-IN")%> / night
-                                <i class="tax-info">&nbsp;&nbsp;+18% GST</i>
-                            </p>
-                        </div>
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3 ">
+        <% for(let listing of alllistings){ %>
+            <a href="/listings/<%=listing._id%>" class="listing-link">
+                <div class="card cols listing-card card-index" >
+                    <img src="<%=listing.image.url%>" class="card-img-top" alt="Image" >
+                    <div class="card-img-overlay"></div>
+                    <div class="card-body card-des">
+                        <p class="card-text"><b><%= listing.title%></b><br>
+                            &#8377;<%=listing.price.toLocaleString("en-IN")%> / night
+                            <i class="tax-info">&nbsp;&nbsp;+18% GST</i>
+                        </p>
                     </div>
-                </a>
-            <% } %>
-        </div>
+                </div>
+            </a>
+        <% } %>
+    </div>
     
 </body>
 <script>
-    let taxswitch=document.getElementById("flexswitchCheckDefault");
-    taxswitch.addEventListener("click",()=>{
-        console.log("clicked");
-        let taxinfo=document.getElementsByClassName("tax-info");
-        for(let info of taxinfo){
-            if(info.style.display!="inline"){
-                info.style.display="inline";
-            }else{
-                info.style.display="none";
+    // Prevent Bootstrap dropdown from closing when interacting with elements inside it.
+    // Used for the price filter dropdown.
+    document.querySelectorAll('.price-dropdown-menu input, .price-dropdown-menu button, .price-dropdown-menu label, .price-dropdown-menu span, .price-dropdown-menu a.btn').forEach(el => {
+        el.addEventListener('click', event => event.stopPropagation());
+    });
+
+    // JavaScript for Tax Toggle (existing)
+    let taxswitch = document.getElementById("flexSwitchCheckDefault"); 
+    if (taxswitch) { 
+        taxswitch.addEventListener("click", () => {
+            let taxinfo = document.getElementsByClassName("tax-info");
+            for (let info of taxinfo) {
+                if (info.style.display != "inline") {
+                    info.style.display = "inline";
+                } else {
+                    info.style.display = "none";
+                }
             }
-        }
-    })
-    
+        });
+    }
+
+    // JavaScript for Price Range Sliders
+    const minPriceSlider = document.getElementById('minPriceRange');
+    const maxPriceSlider = document.getElementById('maxPriceRange');
+    const minPriceDisplay = document.getElementById('minPriceDisplay'); 
+    const maxPriceDisplay = document.getElementById('maxPriceDisplay'); 
+    const currentMinPriceDisp = document.getElementById('currentMinPriceDisp'); 
+    const currentMaxPriceDisp = document.getElementById('currentMaxPriceDisp');
+    const currencySymbolElement = document.getElementById('currencySymbol');
+    const currencySymbol = currencySymbolElement ? currencySymbolElement.textContent : '₹'; 
+
+    const initialMinPrice = parseInt("<%= (typeof minPrice !== 'undefined' && minPrice !== '') ? minPrice : 0 %>") || 0;
+    const initialMaxPrice = parseInt("<%= (typeof maxPrice !== 'undefined' && maxPrice !== '') ? maxPrice : 50000 %>") || 50000;
+
+    if (minPriceSlider && maxPriceSlider && minPriceDisplay && maxPriceDisplay && currentMinPriceDisp && currentMaxPriceDisp) {
+        minPriceDisplay.textContent = initialMinPrice;
+        currentMinPriceDisp.textContent = currencySymbol + initialMinPrice;
+        minPriceSlider.value = initialMinPrice;
+
+        maxPriceDisplay.textContent = initialMaxPrice;
+        currentMaxPriceDisp.textContent = currencySymbol + initialMaxPrice;
+        maxPriceSlider.value = initialMaxPrice;
+
+        minPriceSlider.addEventListener('input', () => {
+            let minVal = parseInt(minPriceSlider.value);
+            let maxVal = parseInt(maxPriceSlider.value);
+            if (minVal > maxVal) {
+                minPriceSlider.value = maxVal; 
+                minVal = maxVal;
+            }
+            minPriceDisplay.textContent = minVal;
+            currentMinPriceDisp.textContent = currencySymbol + minVal;
+        });
+
+        maxPriceSlider.addEventListener('input', () => {
+            let minVal = parseInt(minPriceSlider.value);
+            let maxVal = parseInt(maxPriceSlider.value);
+            if (maxVal < minVal) {
+                maxPriceSlider.value = minVal; 
+                maxVal = minVal;
+            }
+            maxPriceDisplay.textContent = maxVal;
+            currentMaxPriceDisp.textContent = currencySymbol + maxVal;
+        });
+    }
+
+    // JavaScript for Category Links (icon-based) to submit the form
+    const categoryLinks = document.querySelectorAll('a.category-link'); // More specific selector
+    const hiddenCategoryInput = document.getElementById('hiddenCategoryInput');
+    const filterForm = document.getElementById('filter-form');
+
+    if (categoryLinks && hiddenCategoryInput && filterForm) {
+        categoryLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault(); 
+                const category = link.getAttribute('data-category');
+                if (hiddenCategoryInput.value === category) {
+                    hiddenCategoryInput.value = ''; 
+                } else {
+                    hiddenCategoryInput.value = category;
+                }
+                filterForm.submit(); 
+            });
+        });
+    }
+
+    // Highlight active category filter (icon-based)
+    const currentCategoryFromServer = "<%= (typeof currentCategory !== 'undefined' && currentCategory) ? currentCategory : '' %>";
+    if (currentCategoryFromServer) {
+        categoryLinks.forEach(link => {
+            const linkCategory = link.getAttribute('data-category');
+            if (linkCategory === currentCategoryFromServer) {
+                link.closest('.filter').classList.add('active-filter'); // Target parent .filter div
+            }
+        });
+    }
 </script>
 
