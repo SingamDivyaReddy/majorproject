@@ -68,6 +68,18 @@ A dynamic platform where users can explore exciting travel destinations, leave r
 - Enhances user engagement with reviews and listings
 - Scalable model for travel accommodation marketplaces
 
-## 🤝 Contributors
+---
 
-- **Divya Reddy** – [GitHub](https://github.com/SingamDivyaReddy)
+## 📄 License
+
+This project is open-source under the **MIT License**. See the [LICENSE](./LICENSE) file for more info.
+
+---
+
+## 👤 Author
+
+**Divya Reddy Singam**  
+GitHub: [@SingamDivyaReddy](https://github.com/SingamDivyaReddy)
+
+---
+⭐ **Star this repository if you found it helpful!** 
